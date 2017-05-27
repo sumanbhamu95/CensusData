@@ -13,15 +13,13 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-
+//FIND THE TOTAL NUMBER OF ORPHANS WHO ARE NOT WORKING
 
 public class Orphans {
-	public static class ma extends Mapper<LongWritable,Text,Text,IntWritable>
+	public static class MyMapper extends Mapper<LongWritable,Text,Text,IntWritable>
 	{
 		public void map(LongWritable key,Text value,Context context) throws IOException, InterruptedException{
 			String arr[]=value.toString().split(",");
-			
-			
 			
 			String b=arr[3];
 			if(arr[6].toString().contains("Notinuniverse"))
@@ -29,10 +27,10 @@ public class Orphans {
 			
 		}
 	}
-	public static class re extends Reducer<Text,IntWritable,Text,IntWritable>{
+	public static class MyReducer extends Reducer<Text,IntWritable,Text,IntWritable>{
 		public void reduce(Text key,Iterable<IntWritable> value,Context context) throws IOException, InterruptedException{
 			int count=0;
-			int sum=0;
+		//	int sum=0;
 			for(IntWritable a:value){
 				if(a.get()==0){
 					count++;
@@ -48,8 +46,8 @@ public class Orphans {
 		Configuration c=new Configuration();
 		Job job=Job.getInstance(c,"country orphans");
 		job.setJarByClass(Orphans.class);
-		job.setMapperClass(ma.class);
-	job.setReducerClass(re.class);
+		job.setMapperClass(MyMapper.class);
+	job.setReducerClass(MyReducer.class);
 	job.setMapOutputKeyClass(Text.class);
 	job.setMapOutputValueClass(IntWritable.class);
 	//	job.setNumReduceTasks(1);

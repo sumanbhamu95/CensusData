@@ -7,6 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.FloatWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -15,6 +16,10 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+
+
+
+//FIND THE TOTAL SUM OF TAX WHO ARE PAYING TAX
 
 
 
@@ -27,7 +32,7 @@ public class NoOfTaxPayers {
 			
 		}
 	}
-	public static class re extends Reducer<Text,Text,Text,FloatWritable>{
+	public static class re extends Reducer<Text,Text,Text,IntWritable>{
 		HashSet al=new HashSet();
 		public void reduce(Text key,Iterable<Text> value,Context context) throws IOException, InterruptedException{
 			float count=0.0f;
@@ -38,7 +43,7 @@ public class NoOfTaxPayers {
 					al.add(count);
 					}
 		}
-			context.write(key, new FloatWritable(al.size()));
+			context.write(key, new IntWritable(al.size()));
 	}}
 	public static void main(String args[]) throws IOException, ClassNotFoundException, InterruptedException{
 		Configuration obj=new Configuration();
@@ -50,7 +55,7 @@ public class NoOfTaxPayers {
 	job.setMapOutputValueClass(Text.class);
 	//	job.setNumReduceTasks(1);
 		 job.setOutputKeyClass(Text.class);
-		    job.setOutputValueClass(FloatWritable.class);
+		    job.setOutputValueClass(IntWritable.class);
 		    
 		    FileInputFormat.addInputPath(job, new Path(args[0]));
 		    FileOutputFormat.setOutputPath(job, new Path(args[1]));
